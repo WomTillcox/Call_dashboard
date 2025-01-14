@@ -55,3 +55,5 @@ all_data = pd.merge(calls_and_reasons_df
                     , account_table_df
                     , on='account_id'
                     , how='left')
+all_data['called_at'] = pd.to_datetime(all_data['called_at'])
+current_date = all_data['called_at'].max().date()
