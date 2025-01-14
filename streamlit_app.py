@@ -28,19 +28,30 @@ connection.close()
 connection = sqlite3.connect(case_study_db_file)
 
 # Read data from tables
+call_reason_table = "SELECT * FROM call_reason"
+call_reason_df = pd.read_sql_query(call_reason_table, connection)
+
 account_table = "SELECT * FROM account"
 account_table_df = pd.read_sql_query(account_table, connection)
 
-calls_and_reasons = """SELECT * FROM call c
-LEFT JOIN call_reason cr ON c.reason_id = cr.id"""
-calls_and_reasons_df = pd.read_sql_query(call_table, connection)
+call_table = "SELECT * FROM call"
+call_table_df = pd.read_sql_query(call_table, connection)
 
 # Close the connection when done
 connection.close()
 
+call_reason_df.rename(columns={'id':'reason_id'}, inplace=True)
+account_table_df.rename(columns={'id':'account_id'}, inplace=True)
+
+call_table_df['reason_id'] = pd.to_numeric(call_table_df['reason_id'], errors='coerce')  # Coerce invalid values to NaN
+call_table_df['reason_id'] = call_table_df['reason_id'].astype('Int64')
+
+calls_and_reasons_df = pd.merge(call_table_df
+                                , call_reason_df
+                                , how='left'
+                                , on='reason_id')
 calls_and_reasons_df['account_id'] = calls_and_reasons_df['account_id'].astype(int)
 all_data = pd.merge(calls_and_reasons_df
                     , account_table_df
-                    , left_on='account_id'
-                    , right_on='id'
+                    , on='account_id'
                     , how='left')
