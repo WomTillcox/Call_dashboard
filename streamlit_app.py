@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-def main()@
+def main():
     st.title("Octopus Call Dashboard")
     st.write(
         "Overview of key metrics"
