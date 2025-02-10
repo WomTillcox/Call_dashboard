@@ -9,7 +9,7 @@ def main():
     )
 
 
-    db_path = r'/workspaces/Call_dashboard/data files/calls_case_study.db'  # Replace with the path to your .db file
+    db_path = '/workspaces/Call_dashboard/data files/calls_case_study.db'  # Replace with the path to your .db file
     connection = sqlite3.connect(db_path)
 
     # Verify and check available tables first (you can skip this part once you know the table names)
